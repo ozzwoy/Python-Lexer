@@ -17,7 +17,11 @@ public class Main {
                     currentLine = token.getLine();
                     System.out.print(currentLine + ":     ");
                 }
-                System.out.print("(" + token.getType().toString() + ", " + token.getValue() + ")  ");
+                System.out.print("(" + token.getType().toString());
+                if (!token.getValue().equals("") || token.getType() == TokenType.STRING_LITERAL) {
+                    System.out.print(", " + token.getValue());
+                }
+                System.out.print(")  ");
             }
         } catch (IOException e) {
             e.printStackTrace();

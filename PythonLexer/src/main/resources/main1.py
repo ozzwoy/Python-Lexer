@@ -7,7 +7,9 @@
 multiline string
 with empty single quote string next to it'''''
 "this string has no closing quote
-'this too
+'this one too
+"this one has backslash at the end\"
+"another \\ example \t with \k backslashes"
 
 23.133
 893e+132
@@ -28,9 +30,9 @@ with empty single quote string next to it'''''
 
 
 aaa = 2+\bbb=3
-    aaa = 2+\           # backslash does not continue the line due to the comment
+    aaa //= 2+\          # backslash does not continue the line due to the comment
          3
-bbb = 2+\
+bbb = 2**\
   3                     # explicit line continuation, no NEWLINE token is generated
   aaa = 4
     nnn = 4

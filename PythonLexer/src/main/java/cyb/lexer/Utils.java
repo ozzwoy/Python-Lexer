@@ -3,7 +3,11 @@ package cyb.lexer;
 public abstract class Utils {
 
     public static boolean isValidIdentifierStart(char ch) {
-        return Character.isLetter(ch) || ch == '_';
+        return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || ch == '_';
+    }
+
+    public static boolean isValidIdentifierPart(char ch) {
+        return isValidIdentifierStart(ch) || (ch >= '0' && ch <= '9');
     }
 
     public static boolean isCorrectDigit(char ch, int radix) {

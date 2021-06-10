@@ -93,9 +93,13 @@ public class Lexer {
                 case PERCENT -> parseOperatorWithAlternative(TokenType.PERCENT,
                         '=', AutomatonState.PERCENT_ASSIGN);
                 case PERCENT_ASSIGN -> endToken(TokenType.PERCENT_ASSIGN, TokenType.PERCENT_ASSIGN.getValue());
-                case SLASH -> parseOperatorWithAlternative(TokenType.SLASH,
+                case SLASH -> parseOperatorWithDoubleAlternative(TokenType.SLASH,
+                        '=', AutomatonState.SLASH_ASSIGN,
                         '/', AutomatonState.DOUBLE_SLASH);
-                case DOUBLE_SLASH -> endToken(TokenType.DOUBLE_SLASH, TokenType.DOUBLE_SLASH.getValue());
+                case SLASH_ASSIGN -> endToken(TokenType.SLASH_ASSIGN, TokenType.SLASH_ASSIGN.getValue());
+                case DOUBLE_SLASH -> parseOperatorWithAlternative(TokenType.DOUBLE_SLASH,
+                        '=', AutomatonState.DOUBLE_SLASH_ASSIGN);
+                case DOUBLE_SLASH_ASSIGN -> endToken(TokenType.DOUBLE_SLASH_ASSIGN, TokenType.DOUBLE_SLASH_ASSIGN.getValue());
                 case AT -> parseOperatorWithAlternative(TokenType.AT,
                         '=', AutomatonState.AT_ASSIGN);
                 case AT_ASSIGN -> endToken(TokenType.AT_ASSIGN, TokenType.AT_ASSIGN.getValue());
@@ -261,6 +265,7 @@ public class Lexer {
         } else if (currentChar == '\"') {
             startToken(AutomatonState.DOUBLE_QUOTED_STRING);
             buffer.setLength(0);
+            currentStringType = StringType.DOUBLE_QUOTED;
         } else if (currentChar == '\n') {
             parseLineFeed();
         } else if (currentChar == '\\') {
@@ -281,7 +286,7 @@ public class Lexer {
     }
 
     private void parseKeywordOrIdentifier() {
-        if (Character.isUnicodeIdentifierPart(currentChar)) {
+        if (Utils.isValidIdentifierPart(currentChar)) {
             buffer.append(currentChar);
         } else {
             String value = buffer.toString();
@@ -712,7 +717,8 @@ public class Lexer {
         if (escaped != null) {
             buffer.append(escaped);
         } else {
-            buffer.append('\\' + currentChar);
+            buffer.append('\\');
+            buffer.append(currentChar);
         }
         switch (currentStringType) {
             case SINGLE_QUOTED -> state = AutomatonState.SINGLE_QUOTED_STRING;
